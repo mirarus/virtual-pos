@@ -126,7 +126,7 @@ class PayTR extends Provider
 		$hashToken = base64_encode(hash_hmac('sha256', $merchantOid . $apiSecret . $status . $totalAmount, $apiKey, true));
 
 		$orderId = explode('PayTR', $merchantOid);
-		$amount = explode(00, $totalAmount);
+		$amount = ($totalAmount / 100);
 
 		if ($hashToken != $hash) {
 			die('PayTR notification failed: bad hash');
@@ -136,7 +136,7 @@ class PayTR extends Provider
 
 			$data = new stdClass();
 			$data->orderId = $orderId[1];
-			$data->amount = $amount[0];
+			$data->amount = $amount;
 			$data->status = $status;
 
 			$callback($data);
