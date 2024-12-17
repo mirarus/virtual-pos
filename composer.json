@@ -1,0 +1,27 @@
+{
+	"name": "mirarus/virtual-pos",
+	"description": "Multiple Virtual Pos Interface",
+	"license": "MIT",
+	"type": "library",
+	"autoload": {
+		"psr-4": {
+			"Mirarus\\VirtualPos\\": "src/"
+		}
+	},
+	"authors": [
+		{
+			"name": "Ali Güçlü",
+			"email": "aliguclutr@gmail.com"
+		}
+	],
+	"require": {
+		"php": ">=7.3.0",
+		"ext-json": "*",
+		"guzzlehttp/guzzle": "^7.9"
+	},
+	"config": {
+		"platform": {
+			"php": "7.3.0"
+		}
+	}
+}
