@@ -17,7 +17,8 @@
     use Mirarus\VirtualPos\Providers\PayTR;
     use Mirarus\VirtualPos\Enums\Locale;
     use Mirarus\VirtualPos\Enums\Currency;
-    
+
+    // payment Form
     
     $PayTR = new PayTR();
     $PayTR->setApiId("--api-id--");
@@ -72,3 +73,20 @@
     
     $createPaymentForm = $virtualPos->createPaymentForm();
     var_dump($createPaymentForm);
+
+
+    // Callback
+
+    $PayTR = new PayTR();
+    $PayTR->setApiKey("--api-key--");
+    $PayTR->setApiSecret("--api-secret--");
+    
+    $virtualPos = new VirtualPos();
+    $virtualPos->setProvider($PayTR);
+    
+    
+    $createCallback = $virtualPos->createCallback(function($data) {
+    var_dump($data);
+    // CallBack Proccess
+    });
+    var_dump($createCallback);
