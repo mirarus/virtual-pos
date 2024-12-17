@@ -2,7 +2,7 @@
 
 namespace Mirarus\VirtualPos\Models;
 
-use Mirarus\VirtualPos\Interfaces\Model;
+use Mirarus\VirtualPos\Interfaces\AddressInterface;
 
 /**
  * Address
@@ -11,10 +11,10 @@ use Mirarus\VirtualPos\Interfaces\Model;
  * @author     Ali Güçlü <aliguclutr@gmail.com>
  * @copyright  Copyright (c) 2024
  * @license    MIT
- * @version    1.0.0
+ * @version    1.0.1
  * @since      1.0.0
  */
-class Address implements Model
+class Address implements AddressInterface
 {
 	private $address;
 	private $city;

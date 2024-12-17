@@ -3,7 +3,7 @@
 namespace Mirarus\VirtualPos\Interfaces;
 
 /**
- * Model
+ * BuyerInterface
  *
  * @package    Mirarus\VirtualPos\Interfaces
  * @author     Ali Güçlü <aliguclutr@gmail.com>
@@ -12,6 +12,6 @@ namespace Mirarus\VirtualPos\Interfaces;
  * @version    1.0.0
  * @since      1.0.0
  */
-interface Model
+interface BuyerInterface
 {
 }

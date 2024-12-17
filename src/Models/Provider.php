@@ -3,9 +3,7 @@
 namespace Mirarus\VirtualPos\Models;
 
 use Mirarus\VirtualPos\Http\Request;
-use Mirarus\VirtualPos\Interfaces\Model;
 use GuzzleHttp\Client;
-use InvalidArgumentException;
 
 /**
  * Provider
@@ -14,10 +12,10 @@ use InvalidArgumentException;
  * @author     Ali Güçlü <aliguclutr@gmail.com>
  * @copyright  Copyright (c) 2024
  * @license    MIT
- * @version    1.0.0
+ * @version    1.0.1
  * @since      1.0.0
  */
-abstract class Provider implements Model
+abstract class Provider extends Model
 {
 	private $apiId;
 	private $apiKey;
@@ -27,11 +25,6 @@ abstract class Provider implements Model
 	private $apiReturnUrl;
 	private $apiSuccessfulUrl;
 	private $apiFailedUrl;
-
-	private $buyer;
-	private $address;
-	private $order;
-	private $basket;
 
 	/**
 	 * @return Request
@@ -190,85 +183,5 @@ abstract class Provider implements Model
 	public function setApiFailedUrl($apiFailedUrl): void
 	{
 		$this->apiFailedUrl = $apiFailedUrl;
-	}
-
-	/**
-	 * @return Buyer
-	 */
-	public function getBuyer(): Buyer
-	{
-		if ($this->buyer instanceof Buyer) {
-			return $this->buyer;
-		}
-		throw new InvalidArgumentException("Buyer must be an instance of Buyer.");
-	}
-
-	/**
-	 * @param Model $buyer
-	 * @return void
-	 */
-	public function setBuyer(Model $buyer): void
-	{
-		$this->buyer = $buyer;
-	}
-
-	/**
-	 * @return Address
-	 */
-	public function getAddress(): Address
-	{
-		if ($this->address instanceof Address) {
-			return $this->address;
-		}
-		throw new InvalidArgumentException("Address must be an instance of Address.");
-	}
-
-	/**
-	 * @param Model $address
-	 * @return void
-	 */
-	public function setAddress(Model $address): void
-	{
-		$this->address = $address;
-	}
-
-	/**
-	 * @return Order
-	 */
-	public function getOrder(): Order
-	{
-		if ($this->order instanceof Order) {
-			return $this->order;
-		}
-		throw new InvalidArgumentException("Order must be an instance of Order.");
-	}
-
-	/**
-	 * @param Model $order
-	 * @return void
-	 */
-	public function setOrder(Model $order): void
-	{
-		$this->order = $order;
-	}
-
-	/**
-	 * @return Basket
-	 */
-	public function getBasket(): Basket
-	{
-		if ($this->basket instanceof Basket) {
-			return $this->basket;
-		}
-		throw new InvalidArgumentException("Basket must be an instance of Basket.");
-	}
-
-	/**
-	 * @param Model $basket
-	 * @return void
-	 */
-	public function setBasket(Model $basket): void
-	{
-		$this->basket = $basket;
 	}
 }
