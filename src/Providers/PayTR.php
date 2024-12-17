@@ -30,10 +30,12 @@ class PayTR extends Provider
 		$apiId = $this->getApiId();
 		$apiKey = $this->getApiKey();
 		$apiSecret = $this->getApiSecret();
-		$apiSandbox = $this->isApiSandbox();
-		$apiDebug = $this->isApiDebug();
 		$apiSuccessfulUrl = $this->getApiSuccessfulUrl();
 		$apiFailedUrl = $this->getApiFailedUrl();
+		$apiSandbox = $this->isApiSandbox();
+		$apiDebug = $this->isApiDebug();
+		$isApiSandbox = (isset($apiSandbox) ? 1 : 0);
+		$isApiDebug = (isset($apiDebug) ? 1 : 0);
 
 		$userIp = Request::getIp();
 		$userEmail = $this->getBuyer()->getEmail();
@@ -74,7 +76,7 @@ class PayTR extends Provider
 			$basket = null;
 		}
 
-		$hashData = $apiId . $userIp . $merchantOid . $userEmail . $amount . $basket . $noInstallment . $maxInstallment . $orderCurrency . $apiSandbox;
+		$hashData = $apiId . $userIp . $merchantOid . $userEmail . $amount . $basket . $noInstallment . $maxInstallment . $orderCurrency . $isApiSandbox;
 		$hashToken = base64_encode(hash_hmac('sha256', $hashData . $apiSecret, $apiKey, true));
 
 		$response = $this->request()->post("get-token", [
@@ -95,16 +97,17 @@ class PayTR extends Provider
 			"merchant_fail_url" => $apiFailedUrl,
 			"currency" => $orderCurrency,
 			"lang" => $orderLocale,
-			"test_mode" => $apiSandbox,
-			"debug_on" => $apiDebug,
+			"test_mode" => $isApiSandbox,
+			"debug_on" => $isApiDebug,
 			"timeout_limit" => 30
 		  ]
 		]);
 
-		if ($response->token) {
+		if (!empty($response->token)) {
 			return "https://www.paytr.com/odeme/guvenli/" . $response->token;
+		} else {
+			return $response->reason;
 		}
-		return $response->status;
 	}
 
 	/**
@@ -115,10 +118,10 @@ class PayTR extends Provider
 		$apiKey = $this->getApiKey();
 		$apiSecret = $this->getApiSecret();
 
-		$merchantOid = Request::filterXSS((!empty($_POST['merchant_oid']) ? $_POST['merchant_oid'] : null));
-		$status = Request::filterXSS((!empty($_POST['merchant_oid']) ? $_POST['status'] : null));
-		$totalAmount = Request::filterXSS((!empty($_POST['merchant_oid']) ? $_POST['total_amount'] : null));
-		$hash = Request::filterXSS((!empty($_POST['merchant_oid']) ? $_POST['hash'] : null));
+		$merchantOid = !empty($_POST['merchant_oid']) ? $_POST['merchant_oid'] : null;
+		$status = !empty($_POST['merchant_oid']) ? $_POST['status'] : null;
+		$totalAmount = !empty($_POST['merchant_oid']) ? $_POST['total_amount'] : null;
+		$hash = !empty($_POST['merchant_oid']) ? $_POST['hash'] : null;
 
 		$hashToken = base64_encode(hash_hmac('sha256', $merchantOid . $apiSecret . $status . $totalAmount, $apiKey, true));
 
