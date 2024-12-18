@@ -18,6 +18,8 @@ use Mirarus\VirtualPos\Interfaces\BasketItemInterface;
 class Basket implements BasketInterface
 {
 	private $basketItems;
+	private $name;
+	private $type = "VIRTUAL";
 
 	/**
 	 * @return mixed
@@ -34,5 +36,39 @@ class Basket implements BasketInterface
 	public function setBasketItem(BasketItemInterface $basketItem): void
 	{
 		$this->basketItems[] = $basketItem;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getName(): string
+	{
+		return $this->name;
+	}
+
+	/**
+	 * @param string $name
+	 * @return void
+	 */
+	public function setName(string $name): void
+	{
+		$this->name = $name;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getType(): string
+	{
+		return $this->type;
+	}
+
+	/**
+	 * @param string $type
+	 * @return void
+	 */
+	public function setType(string $type): void
+	{
+		$this->type = $type;
 	}
 }

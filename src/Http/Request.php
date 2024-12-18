@@ -45,7 +45,7 @@ class Request
 	 * @param array $data
 	 * @return mixed|stdClass|string
 	 */
-	public function post(string $endpoint, array $data = [])
+	public function post(string $endpoint, array $data = [], &$response = null)
 	{
 		try {
 			$response = $this->client->post($endpoint, $data);

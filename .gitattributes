@@ -1,2 +1,28 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+API_key:b0b09b8cf60d240011192a51e7a17435
+website_index:1
+platform_order_id:10000
+product_name:[{"name":"Binocular","product_id":"BI101","product_type":0,"quantity":1,"price":0.3}]
+product_type:0
+buyer_name:John Doe
+buyer_surname:Smith
+buyer_email:john@doe.com
+buyer_account_age:0
+buyer_id_nr:1
+buyer_phone:0123456789
+billing_address:... Mah. ... Sok. No: ..., Keçiören, Ankara, Turkey, 06000
+billing_city:Ankara
+billing_country:Turkey
+billing_postcode:06000
+shipping_address:NA
+shipping_city:NA
+shipping_country:NA
+shipping_postcode:NA
+total_order_value:1
+currency:0
+current_language:0
+modul_version:1.0.4
+platform:0
+is_in_frame:0
+random_nr:404581
+callback_url:https://mirarussunucum.cloud/virtual-pos/callback.php
+signature:W1o5R66deM8j9F5VvKLwy2gJdJxAVNHjczqau1Dduh8=

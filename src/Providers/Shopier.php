@@ -3,7 +3,7 @@
 namespace Mirarus\VirtualPos\Providers;
 
 use stdClass;
-use Mirarus\VirtualPos\Enums\BasketItemType;
+use Mirarus\VirtualPos\Enums\BasketType;
 use Mirarus\VirtualPos\Enums\Currency;
 use Mirarus\VirtualPos\Enums\Locale;
 use Mirarus\VirtualPos\Interfaces\ProviderInterface;
@@ -25,7 +25,6 @@ class Shopier extends Provider implements ProviderInterface
 	protected $timeout = 30;
 	protected $sslVerify = false;
 	private $webSiteIndex = 1;
-
 
 	/**
 	 * @return string
@@ -55,37 +54,21 @@ class Shopier extends Provider implements ProviderInterface
 		$orderCurrency = $this->getOrder()->getCurrency();
 		$orderLocale = $this->getOrder()->getLocale();
 
-		$basketItems = $this->getBasket()->getBasketItems();
+		$basketName = $this->getBasket()->getName();
+		$basketType = $this->getBasket()->getType();
 
-		$random_nr = uniqid() . "Shopier" . $orderId;
 		$amount = round($orderPrice, 2);
+		$random_nr = rand(100000, 999999);
 
-		if (!empty($basketItems)) {
-			$basketArray = [];
-			foreach ($basketItems as $item) {
-				$productName = $item->getName();
-				$productName = str_replace('"', '', $productName);
-				$productName = str_replace('&quot;', '', $productName);
+		$productName = str_replace('"', '', $basketName);
+		$productName = str_replace('&quot;', '', $productName);
 
-				if ($item->getType() == BasketItemType::VIRTUAL) {
-					$productType = 1;
-				} else if ($item->getType() == BasketItemType::PHYSICAL) {
-					$productType = 0;
-				} else {
-					$productType = 1;
-				}
-
-				$basketArray[] = [
-				  'name' => trim($productName),
-				  'product_id' => $item->getId(),
-				  'product_type' => $productType,
-				  'quantity' => $item->getQuantity(),
-				  'price' => round($item->getPrice(), 2)
-				];
-			}
-			$basket = htmlspecialchars(json_encode($basketArray, JSON_UNESCAPED_UNICODE));
+		if ($basketType == BasketType::VIRTUAL) {
+			$productType = 1;
+		} else if ($basketType == BasketType::PHYSICAL) {
+			$productType = 0;
 		} else {
-			$basket = null;
+			$productType = 1;
 		}
 
 		if ($orderCurrency == Currency::TL) {
@@ -110,8 +93,8 @@ class Shopier extends Provider implements ProviderInterface
 		  'API_key' => $apiKey,
 		  'website_index' => $webSiteIndex,
 		  'platform_order_id' => $orderId,
-		  'product_name' => $basket,
-		  'product_type' => 1,
+		  'product_name' => $productName,
+		  'product_type' => $productType,
 		  'buyer_name' => $buyerName,
 		  'buyer_surname' => $buyerSurname,
 		  'buyer_email' => $buyerEmail,
@@ -130,24 +113,23 @@ class Shopier extends Provider implements ProviderInterface
 		  'currency' => $currency,
 		  'current_language' => $locale,
 		  'modul_version' => "1.0.4",
-		  'platform' => 4,
+		  'platform' => 0,
 		  'is_in_frame' => 0,
 		  'random_nr' => $random_nr,
 		  'callback_url' => $apiReturnUrl
 		];
 
 		$hashData = ($random_nr . $orderId . $amount . $currency);
-		$hashToken = base64_encode(hash_hmac('sha256', $hashData . $apiSecret, true));
+		$hashToken = base64_encode(hash_hmac('sha256', $hashData, $apiSecret, true));
 		$formFields['signature'] = $hashToken;
 
-		$htmlOutput = '<form method="post" action="' . $this->baseUri . '">';
+		$formOutput = '<form id="shopier_payment_form" method="post" action="' . htmlspecialchars($this->baseUri, ENT_QUOTES, 'UTF-8') . '">';
 		foreach ($formFields as $k => $v) {
-			$htmlOutput .= '<input type="hidden" name="' . $k . '" value="' . $v . '" />';
+			$formOutput .= '<input type="hidden" name="' . htmlspecialchars($k, ENT_QUOTES, 'UTF-8') . '" value="' . htmlspecialchars($v, ENT_QUOTES, 'UTF-8') . '" />';
 		}
-		$htmlOutput .= '<input type="submit"/>';
-		$htmlOutput .= '</form>';
+		$formOutput .= '</form><script type="text/javascript">document.getElementById("shopier_payment_form").submit();</script>';
 
-		return $htmlOutput;
+		return $formOutput;
 	}
 
 	/**
@@ -158,10 +140,8 @@ class Shopier extends Provider implements ProviderInterface
 		$apiSecret = $this->getApiSecret();
 
 		$orderId = !empty($_REQUEST['platform_order_id']) ? $_REQUEST['platform_order_id'] : null;
-		$paymentId = !empty($_REQUEST['payment_id']) ? $_REQUEST['payment_id'] : null;
 		$signature = !empty($_REQUEST['signature']) ? $_REQUEST['signature'] : null;
 		$randomNr = !empty($_REQUEST['random_nr']) ? $_REQUEST['random_nr'] : null;
-		$installment = !empty($_REQUEST['installment']) ? $_REQUEST['installment'] : null;
 		$status = !empty($_REQUEST['status']) ? $_REQUEST['status'] : null;
 		$errorMessage = !empty($_REQUEST['error_message']) ? $_REQUEST['error_message'] : null;
 
@@ -177,11 +157,7 @@ class Shopier extends Provider implements ProviderInterface
 
 			$data = new stdClass();
 			$data->orderId = $orderId;
-			$data->paymentId = $paymentId;
-			$data->installment = $installment;
 			$data->status = $status;
-
-			var_dump($_REQUEST);
 
 			$callback($data);
 		}

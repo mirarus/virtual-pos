@@ -52,7 +52,7 @@ $order->setInstallment(1);
 $basketItem = new BasketItem();
 $basketItem->setName("Ayakkabı");
 $basketItem->setPrice("10.30");
-$basketItem->setQty("1");
+$basketItem->setQuantity("1");
 
 $basket = new Basket();
 $basket->setBasketItem($basketItem);

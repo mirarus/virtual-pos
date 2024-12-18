@@ -24,4 +24,26 @@ interface BasketInterface
 	 * @return void
 	 */
 	public function setBasketItem(BasketItemInterface $basketItem): void;
+
+	/**
+	 * @return string
+	 */
+	public function getName(): string;
+
+	/**
+	 * @param string $name
+	 * @return void
+	 */
+	public function setName(string $name): void;
+
+	/**
+	 * @return string
+	 */
+	public function getType(): string;
+
+	/**
+	 * @param string $type
+	 * @return void
+	 */
+	public function setType(string $type): void;
 }

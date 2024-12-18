@@ -107,7 +107,10 @@ class PayTR extends Provider implements ProviderInterface
 		]);
 
 		if (!empty($response->token)) {
-			return "https://www.paytr.com/odeme/guvenli/" . $response->token;
+
+			$url = "https://www.paytr.com/odeme/guvenli/" . $response->token;
+			return '<script type="text/javascript">window.location.href = "' . $url . '";</script>';
+
 		} else {
 			return $response->reason;
 		}
@@ -139,7 +142,6 @@ class PayTR extends Provider implements ProviderInterface
 
 			$data = new stdClass();
 			$data->orderId = $orderId[1];
-			$data->amount = $amount;
 			$data->status = $status;
 
 			$callback($data);

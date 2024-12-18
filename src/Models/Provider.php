@@ -146,15 +146,16 @@ abstract class Provider extends Model implements ProviderInterface
 	}
 
 	/**
+	 * @param array $options
 	 * @return Request
 	 */
-	protected function request(): Request
+	protected function request(array $options = []): Request
 	{
-		$client = new Client([
+		$client = new Client(array_merge([
 		  'base_uri' => $this->baseUri,
 		  'timeout' => $this->timeout,
 		  'verify' => $this->sslVerify
-		]);
+		], $options));
 
 		return new Request($client);
 	}
