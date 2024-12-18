@@ -2,6 +2,7 @@
 
 namespace Mirarus\VirtualPos\Models;
 
+use Mirarus\VirtualPos\Interfaces\ModelInterface;
 use Mirarus\VirtualPos\Interfaces\BuyerInterface;
 use Mirarus\VirtualPos\Interfaces\AddressInterface;
 use Mirarus\VirtualPos\Interfaces\OrderInterface;
@@ -17,7 +18,7 @@ use Mirarus\VirtualPos\Interfaces\BasketInterface;
  * @version    1.0.0
  * @since      1.0.0
  */
-abstract class Model
+abstract class Model implements ModelInterface
 {
 	private $buyer;
 	private $address;

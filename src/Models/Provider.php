@@ -2,6 +2,7 @@
 
 namespace Mirarus\VirtualPos\Models;
 
+use Mirarus\VirtualPos\Interfaces\ProviderInterface;
 use Mirarus\VirtualPos\Http\Request;
 use GuzzleHttp\Client;
 
@@ -15,7 +16,7 @@ use GuzzleHttp\Client;
  * @version    1.0.1
  * @since      1.0.0
  */
-abstract class Provider extends Model
+abstract class Provider extends Model implements ProviderInterface
 {
 	private $apiId;
 	private $apiKey;
@@ -25,6 +26,142 @@ abstract class Provider extends Model
 	private $apiReturnUrl;
 	private $apiSuccessfulUrl;
 	private $apiFailedUrl;
+
+	/**
+	 * @return mixed
+	 */
+	protected function getApiId()
+	{
+		return $this->apiId;
+	}
+
+	/**
+	 * @param $apiId
+	 * @return void
+	 */
+	public function setApiId($apiId): void
+	{
+		$this->apiId = $apiId;
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function getApiKey(): string
+	{
+		return $this->apiKey;
+	}
+
+	/**
+	 * @param string $apiKey
+	 * @return void
+	 */
+	public function setApiKey(string $apiKey): void
+	{
+		$this->apiKey = $apiKey;
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function getApiSecret(): string
+	{
+		return $this->apiSecret;
+	}
+
+	/**
+	 * @param string $apiSecret
+	 * @return void
+	 */
+	public function setApiSecret(string $apiSecret): void
+	{
+		$this->apiSecret = $apiSecret;
+	}
+
+	/**
+	 * @return bool
+	 */
+	protected function isApiSandbox(): bool
+	{
+		return $this->apiSandbox;
+	}
+
+	/**
+	 * @param bool $apiSandbox
+	 * @return void
+	 */
+	public function setApiSandbox(bool $apiSandbox): void
+	{
+		$this->apiSandbox = $apiSandbox;
+	}
+
+	/**
+	 * @return bool
+	 */
+	protected function isApiDebug(): bool
+	{
+		return $this->apiDebug;
+	}
+
+	/**
+	 * @param bool $apiDebug
+	 * @return void
+	 */
+	public function setApiDebug(bool $apiDebug): void
+	{
+		$this->apiDebug = $apiDebug;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getApiReturnUrl(): string
+	{
+		return $this->apiReturnUrl;
+	}
+
+	/**
+	 * @param string $apiReturnUrl
+	 * @return void
+	 */
+	public function setApiReturnUrl(string $apiReturnUrl): void
+	{
+		$this->apiReturnUrl = $apiReturnUrl;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getApiSuccessfulUrl(): string
+	{
+		return $this->apiSuccessfulUrl;
+	}
+
+	/**
+	 * @param string $apiSuccessfulUrl
+	 * @return void
+	 */
+	public function setApiSuccessfulUrl(string $apiSuccessfulUrl): void
+	{
+		$this->apiSuccessfulUrl = $apiSuccessfulUrl;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getApiFailedUrl(): string
+	{
+		return $this->apiFailedUrl;
+	}
+
+	/**
+	 * @param string $apiFailedUrl
+	 * @return void
+	 */
+	public function setApiFailedUrl(string $apiFailedUrl): void
+	{
+		$this->apiFailedUrl = $apiFailedUrl;
+	}
 
 	/**
 	 * @return Request
@@ -53,135 +190,5 @@ abstract class Provider extends Model
 	 */
 	protected function createCallback(callable $callback)
 	{
-	}
-
-	/**
-	 * @return mixed
-	 */
-	protected function getApiId()
-	{
-		return $this->apiId;
-	}
-
-	/**
-	 * @param mixed $apiId
-	 */
-	public function setApiId($apiId): void
-	{
-		$this->apiId = $apiId;
-	}
-
-	/**
-	 * @return mixed
-	 */
-	protected function getApiKey()
-	{
-		return $this->apiKey;
-	}
-
-	/**
-	 * @param mixed $apiKey
-	 */
-	public function setApiKey($apiKey): void
-	{
-		$this->apiKey = $apiKey;
-	}
-
-	/**
-	 * @return mixed
-	 */
-	protected function getApiSecret()
-	{
-		return $this->apiSecret;
-	}
-
-	/**
-	 * @param mixed $apiSecret
-	 */
-	public function setApiSecret($apiSecret): void
-	{
-		$this->apiSecret = $apiSecret;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isApiSandbox(): bool
-	{
-		return $this->apiSandbox;
-	}
-
-	/**
-	 * @param bool $apiSandbox
-	 * @return void
-	 */
-	public function setApiSandbox(bool $apiSandbox): void
-	{
-		$this->apiSandbox = $apiSandbox;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isApiDebug(): bool
-	{
-		return $this->apiDebug;
-	}
-
-	/**
-	 * @param bool $apiDebug
-	 * @return void
-	 */
-	public function setApiDebug(bool $apiDebug): void
-	{
-		$this->apiDebug = $apiDebug;
-	}
-
-	/**
-	 * @return mixed
-	 */
-	public function getApiReturnUrl()
-	{
-		return $this->apiReturnUrl;
-	}
-
-	/**
-	 * @param mixed $apiReturnUrl
-	 */
-	public function setApiReturnUrl($apiReturnUrl): void
-	{
-		$this->apiReturnUrl = $apiReturnUrl;
-	}
-
-	/**
-	 * @return mixed
-	 */
-	public function getApiSuccessfulUrl()
-	{
-		return $this->apiSuccessfulUrl;
-	}
-
-	/**
-	 * @param mixed $apiSuccessfulUrl
-	 */
-	public function setApiSuccessfulUrl($apiSuccessfulUrl): void
-	{
-		$this->apiSuccessfulUrl = $apiSuccessfulUrl;
-	}
-
-	/**
-	 * @return mixed
-	 */
-	public function getApiFailedUrl()
-	{
-		return $this->apiFailedUrl;
-	}
-
-	/**
-	 * @param mixed $apiFailedUrl
-	 */
-	public function setApiFailedUrl($apiFailedUrl): void
-	{
-		$this->apiFailedUrl = $apiFailedUrl;
 	}
 }

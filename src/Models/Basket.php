@@ -3,6 +3,7 @@
 namespace Mirarus\VirtualPos\Models;
 
 use Mirarus\VirtualPos\Interfaces\BasketInterface;
+use Mirarus\VirtualPos\Interfaces\BasketItemInterface;
 
 /**
  * Basket
@@ -11,7 +12,7 @@ use Mirarus\VirtualPos\Interfaces\BasketInterface;
  * @author     Ali Güçlü <aliguclutr@gmail.com>
  * @copyright  Copyright (c) 2024
  * @license    MIT
- * @version    1.0.1
+ * @version    1.0.2
  * @since      1.0.0
  */
 class Basket implements BasketInterface
@@ -27,9 +28,10 @@ class Basket implements BasketInterface
 	}
 
 	/**
-	 * @param mixed $basketItem
+	 * @param BasketItemInterface $basketItem
+	 * @return void
 	 */
-	public function setBasketItem(BasketItem $basketItem): void
+	public function setBasketItem(BasketItemInterface $basketItem): void
 	{
 		$this->basketItems[] = $basketItem;
 	}

@@ -11,7 +11,7 @@ use Mirarus\VirtualPos\Interfaces\AddressInterface;
  * @author     Ali Güçlü <aliguclutr@gmail.com>
  * @copyright  Copyright (c) 2024
  * @license    MIT
- * @version    1.0.1
+ * @version    1.0.2
  * @since      1.0.0
  */
 class Address implements AddressInterface
@@ -31,7 +31,8 @@ class Address implements AddressInterface
 	}
 
 	/**
-	 * @param mixed $address
+	 * @param $address
+	 * @return void
 	 */
 	public function setAddress($address): void
 	{
@@ -47,7 +48,8 @@ class Address implements AddressInterface
 	}
 
 	/**
-	 * @param mixed $city
+	 * @param $city
+	 * @return void
 	 */
 	public function setCity($city): void
 	{
@@ -63,7 +65,8 @@ class Address implements AddressInterface
 	}
 
 	/**
-	 * @param mixed $state
+	 * @param $state
+	 * @return void
 	 */
 	public function setState($state): void
 	{
@@ -79,7 +82,8 @@ class Address implements AddressInterface
 	}
 
 	/**
-	 * @param mixed $zipCode
+	 * @param $zipCode
+	 * @return void
 	 */
 	public function setZipCode($zipCode): void
 	{
@@ -95,7 +99,8 @@ class Address implements AddressInterface
 	}
 
 	/**
-	 * @param mixed $country
+	 * @param $country
+	 * @return void
 	 */
 	public function setCountry($country): void
 	{

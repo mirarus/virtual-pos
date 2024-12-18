@@ -31,7 +31,8 @@ class Order implements OrderInterface
 	}
 
 	/**
-	 * @param mixed $id
+	 * @param $id
+	 * @return void
 	 */
 	public function setId($id): void
 	{
@@ -39,7 +40,7 @@ class Order implements OrderInterface
 	}
 
 	/**
-	 * @return mixed
+	 * @return float
 	 */
 	public function getPrice(): float
 	{
@@ -56,33 +57,35 @@ class Order implements OrderInterface
 	}
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getLocale()
+	public function getLocale(): string
 	{
 		return $this->locale;
 	}
 
 	/**
-	 * @param mixed $locale
+	 * @param string $locale
+	 * @return void
 	 */
-	public function setLocale($locale): void
+	public function setLocale(string $locale): void
 	{
 		$this->locale = $locale;
 	}
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getCurrency()
+	public function getCurrency(): string
 	{
 		return $this->currency;
 	}
 
 	/**
-	 * @param mixed $currency
+	 * @param string $currency
+	 * @return void
 	 */
-	public function setCurrency($currency): void
+	public function setCurrency(string $currency): void
 	{
 		$this->currency = $currency;
 	}

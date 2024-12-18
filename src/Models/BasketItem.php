@@ -19,7 +19,7 @@ class BasketItem implements BasketItemInterface
 	private $id;
 	private $name;
 	private $price = 0.0;
-	private $qty = 1;
+	private $quantity = 1;
 	private $type;
 
 	/**
@@ -31,7 +31,8 @@ class BasketItem implements BasketItemInterface
 	}
 
 	/**
-	 * @param mixed $id
+	 * @param $id
+	 * @return void
 	 */
 	public function setId($id): void
 	{
@@ -39,17 +40,18 @@ class BasketItem implements BasketItemInterface
 	}
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getName()
+	public function getName(): string
 	{
 		return $this->name;
 	}
 
 	/**
-	 * @param mixed $name
+	 * @param string $name
+	 * @return void
 	 */
-	public function setName($name): void
+	public function setName(string $name): void
 	{
 		$this->name = $name;
 	}
@@ -74,32 +76,33 @@ class BasketItem implements BasketItemInterface
 	/**
 	 * @return int
 	 */
-	public function getQty(): int
+	public function getQuantity(): int
 	{
-		return $this->qty;
+		return $this->quantity;
 	}
 
 	/**
-	 * @param int $qty
+	 * @param int $quantity
 	 * @return void
 	 */
-	public function setQty(int $qty): void
+	public function setQuantity(int $quantity): void
 	{
-		$this->qty = $qty;
+		$this->quantity = $quantity;
 	}
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getType()
+	public function getType(): string
 	{
 		return $this->type;
 	}
 
 	/**
-	 * @param mixed $type
+	 * @param string $type
+	 * @return void
 	 */
-	public function setType($type): void
+	public function setType(string $type): void
 	{
 		$this->type = $type;
 	}

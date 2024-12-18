@@ -31,7 +31,8 @@ class Buyer implements BuyerInterface
 	}
 
 	/**
-	 * @param mixed $id
+	 * @param $id
+	 * @return void
 	 */
 	public function setId($id): void
 	{
@@ -39,49 +40,52 @@ class Buyer implements BuyerInterface
 	}
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getName()
+	public function getName(): string
 	{
 		return $this->name;
 	}
 
 	/**
-	 * @param mixed $name
+	 * @param string $name
+	 * @return void
 	 */
-	public function setName($name): void
+	public function setName(string $name): void
 	{
 		$this->name = $name;
 	}
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getSurname()
+	public function getSurname(): string
 	{
 		return $this->surname;
 	}
 
 	/**
-	 * @param mixed $surname
+	 * @param string $surname
+	 * @return void
 	 */
-	public function setSurname($surname): void
+	public function setSurname(string $surname): void
 	{
 		$this->surname = $surname;
 	}
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getEmail()
+	public function getEmail(): string
 	{
 		return $this->email;
 	}
 
 	/**
-	 * @param mixed $email
+	 * @param string $email
+	 * @return void
 	 */
-	public function setEmail($email): void
+	public function setEmail(string $email): void
 	{
 		$this->email = $email;
 	}
@@ -95,7 +99,8 @@ class Buyer implements BuyerInterface
 	}
 
 	/**
-	 * @param mixed $phone
+	 * @param $phone
+	 * @return void
 	 */
 	public function setPhone($phone): void
 	{

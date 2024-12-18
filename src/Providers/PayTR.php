@@ -67,7 +67,7 @@ class PayTR extends Provider implements ProviderInterface
 		if (!empty($basketItems)) {
 			$basketArray = [];
 			foreach ($basketItems as $item) {
-				$basketArray[] = [$item->getName(), round($item->getPrice(), 2), $item->getQty()];
+				$basketArray[] = [$item->getName(), round($item->getPrice(), 2), $item->getQuantity()];
 			}
 			$basket = base64_encode(json_encode($basketArray));
 		} else {
