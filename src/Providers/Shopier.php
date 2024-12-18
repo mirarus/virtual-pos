@@ -2,13 +2,12 @@
 
 namespace Mirarus\VirtualPos\Providers;
 
+use stdClass;
 use Mirarus\VirtualPos\Enums\BasketItemType;
 use Mirarus\VirtualPos\Enums\Currency;
 use Mirarus\VirtualPos\Enums\Locale;
-use stdClass;
 use Mirarus\VirtualPos\Interfaces\ProviderInterface;
 use Mirarus\VirtualPos\Models\Provider;
-use Mirarus\VirtualPos\Http\Request;
 
 /**
  * Shopier
@@ -59,7 +58,7 @@ class Shopier extends Provider implements ProviderInterface
 		$basketItems = $this->getBasket()->getBasketItems();
 
 		$random_nr = uniqid() . "Shopier" . $orderId;
-		$amount = round($orderPrice,2);
+		$amount = round($orderPrice, 2);
 
 		if (!empty($basketItems)) {
 			$basketArray = [];
@@ -81,7 +80,7 @@ class Shopier extends Provider implements ProviderInterface
 				  'product_id' => $item->getId(),
 				  'product_type' => $productType,
 				  'quantity' => $item->getQuantity(),
-				  'price' =>  round($item->getPrice(),2)
+				  'price' => round($item->getPrice(), 2)
 				];
 			}
 			$basket = htmlspecialchars(json_encode($basketArray, JSON_UNESCAPED_UNICODE));
@@ -141,9 +140,7 @@ class Shopier extends Provider implements ProviderInterface
 		$hashToken = base64_encode(hash_hmac('sha256', $hashData . $apiSecret, true));
 		$formFields['signature'] = $hashToken;
 
-		$url = $this->baseUri;
-
-		$htmlOutput = '<form method="post" action="' . $url . '">';
+		$htmlOutput = '<form method="post" action="' . $this->baseUri . '">';
 		foreach ($formFields as $k => $v) {
 			$htmlOutput .= '<input type="hidden" name="' . $k . '" value="' . $v . '" />';
 		}
@@ -151,41 +148,6 @@ class Shopier extends Provider implements ProviderInterface
 		$htmlOutput .= '</form>';
 
 		return $htmlOutput;
-
-
-		/*
-				$hashData = $apiId . $userIp . $merchantOid . $userEmail . $amount . $basket . $noInstallment . $maxInstallment . $orderCurrency . $apiSandbox;
-				$hashToken = base64_encode(hash_hmac('sha256', $hashData . $apiSecret, $apiKey, true));
-
-				$response = $this->request()->post("get-token", [
-				  "form_params" => [
-					"merchant_id" => $apiId,
-					"merchant_oid" => $merchantOid,
-					"payment_amount" => $amount,
-					"paytr_token" => $hashToken,
-					"no_installment" => $noInstallment,
-					"max_installment" => $maxInstallment,
-					"user_basket" => $basket,
-					"user_ip" => $userIp,
-					"email" => $userEmail,
-					"user_name" => $userFullName,
-					"user_phone" => $userPhone,
-					"user_address" => $address,
-					"merchant_ok_url" => $apiSuccessfulUrl,
-					"merchant_fail_url" => $apiFailedUrl,
-					"currency" => $orderCurrency,
-					"lang" => $orderLocale,
-					"test_mode" => $apiSandbox,
-					"debug_on" => $apiDebug,
-					"timeout_limit" => 30
-				  ]
-				]);
-
-				if (!empty($response->token)) {
-					return "https://www.paytr.com/odeme/guvenli/" . $response->token;
-				} else {
-					return $response->reason;
-				}*/
 	}
 
 	/**
@@ -193,41 +155,50 @@ class Shopier extends Provider implements ProviderInterface
 	 */
 	public function createCallback(callable $callback)
 	{
-		$apiKey = $this->getApiKey();
 		$apiSecret = $this->getApiSecret();
 
-		$merchantOid = !empty($_POST['merchant_oid']) ? $_POST['merchant_oid'] : null;
-		$status = !empty($_POST['merchant_oid']) ? $_POST['status'] : null;
-		$totalAmount = !empty($_POST['merchant_oid']) ? $_POST['total_amount'] : null;
-		$hash = !empty($_POST['merchant_oid']) ? $_POST['hash'] : null;
+		$orderId = !empty($_REQUEST['platform_order_id']) ? $_REQUEST['platform_order_id'] : null;
+		$paymentId = !empty($_REQUEST['payment_id']) ? $_REQUEST['payment_id'] : null;
+		$signature = !empty($_REQUEST['signature']) ? $_REQUEST['signature'] : null;
+		$randomNr = !empty($_REQUEST['random_nr']) ? $_REQUEST['random_nr'] : null;
+		$installment = !empty($_REQUEST['installment']) ? $_REQUEST['installment'] : null;
+		$status = !empty($_REQUEST['status']) ? $_REQUEST['status'] : null;
+		$errorMessage = !empty($_REQUEST['error_message']) ? $_REQUEST['error_message'] : null;
 
-		$hashToken = base64_encode(hash_hmac('sha256', $merchantOid . $apiSecret . $status . $totalAmount, $apiKey, true));
+		$status = strtolower($status);
+		$signature = base64_decode($signature);
+		$expected = hash_hmac('SHA256', ($randomNr . $orderId), $apiSecret, true);
 
-		$orderId = explode('PayTR', $merchantOid);
-		$amount = ($totalAmount / 100);
-
-		if ($hashToken != $hash) {
-			die('PayTR notification failed: bad hash');
+		if ($signature != $expected) {
+			die('Shopier notification failed: bad signature');
 		} else if ($status != 'success') {
-			echo "ERROR";
+			echo $errorMessage;
 		} else {
 
 			$data = new stdClass();
-			$data->orderId = $orderId[1];
-			$data->amount = $amount;
+			$data->orderId = $orderId;
+			$data->paymentId = $paymentId;
+			$data->installment = $installment;
 			$data->status = $status;
 
-			$callback($data);
+			var_dump($_REQUEST);
 
-			echo "OK";
+			$callback($data);
 		}
 	}
 
+	/**
+	 * @return int
+	 */
 	public function getWebSiteIndex(): int
 	{
 		return $this->webSiteIndex;
 	}
 
+	/**
+	 * @param int $webSiteIndex
+	 * @return void
+	 */
 	public function setWebSiteIndex(int $webSiteIndex): void
 	{
 		$this->webSiteIndex = $webSiteIndex;

@@ -126,7 +126,7 @@ class PayTR extends Provider implements ProviderInterface
 		$totalAmount = !empty($_POST['merchant_oid']) ? $_POST['total_amount'] : null;
 		$hash = !empty($_POST['merchant_oid']) ? $_POST['hash'] : null;
 
-		$hashToken = base64_encode(hash_hmac('sha256', $merchantOid . $apiSecret . $status . $totalAmount, $apiKey, true));
+		$hashToken = base64_encode(hash_hmac('sha256', ($merchantOid . $apiSecret . $status . $totalAmount), $apiKey, true));
 
 		$orderId = explode('PayTR', $merchantOid);
 		$amount = ($totalAmount / 100);
