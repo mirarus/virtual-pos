@@ -22,6 +22,7 @@ class PayTR extends Provider implements ProviderInterface
 	protected $baseUri = "https://www.paytr.com/odeme/api/";
 	protected $timeout = 30;
 	protected $sslVerify = false;
+	private $apiId;
 
 	/**
 	 * @return string
@@ -36,12 +37,12 @@ class PayTR extends Provider implements ProviderInterface
 		$apiSandbox = ($this->isApiSandbox() !== null ? 1 : 0);
 		$apiDebug = ($this->isApiDebug() !== null ? 1 : 0);
 
-		$userIp = Request::getIp();
-		$userEmail = $this->getBuyer()->getEmail();
-		$userName = $this->getBuyer()->getName();
-		$userSurname = $this->getBuyer()->getSurname();
-		$userPhone = $this->getBuyer()->getPhone();
-		$userFullName = implode(' ', [$userName, $userSurname]);
+		$buyerIp = Request::getIp();
+		$buyerEmail = $this->getBuyer()->getEmail();
+		$buyerName = $this->getBuyer()->getName();
+		$buyerSurname = $this->getBuyer()->getSurname();
+		$buyerPhone = $this->getBuyer()->getPhone();
+		$buyerFullName = implode(' ', [$buyerName, $buyerSurname]);
 
 		$addressAddress = $this->getAddress()->getAddress();
 		$addressState = $this->getAddress()->getState();
@@ -67,14 +68,18 @@ class PayTR extends Provider implements ProviderInterface
 		if (!empty($basketItems)) {
 			$basketArray = [];
 			foreach ($basketItems as $item) {
-				$basketArray[] = [$item->getName(), round($item->getPrice(), 2), $item->getQuantity()];
+				$basketArray[] = [
+				  $item->getName(),
+				  round($item->getPrice(), 2),
+				  $item->getQuantity()
+				];
 			}
 			$basket = base64_encode(json_encode($basketArray));
 		} else {
 			$basket = null;
 		}
 
-		$hashData = $apiId . $userIp . $merchantOid . $userEmail . $amount . $basket . $noInstallment . $maxInstallment . $orderCurrency . $apiSandbox;
+		$hashData = ($apiId . $buyerIp . $merchantOid . $buyerEmail . $amount . $basket . $noInstallment . $maxInstallment . $orderCurrency . $apiSandbox);
 		$hashToken = base64_encode(hash_hmac('sha256', $hashData . $apiSecret, $apiKey, true));
 
 		$response = $this->request()->post("get-token", [
@@ -86,10 +91,10 @@ class PayTR extends Provider implements ProviderInterface
 			"no_installment" => $noInstallment,
 			"max_installment" => $maxInstallment,
 			"user_basket" => $basket,
-			"user_ip" => $userIp,
-			"email" => $userEmail,
-			"user_name" => $userFullName,
-			"user_phone" => $userPhone,
+			"user_ip" => $buyerIp,
+			"email" => $buyerEmail,
+			"user_name" => $buyerFullName,
+			"user_phone" => $buyerPhone,
 			"user_address" => $address,
 			"merchant_ok_url" => $apiSuccessfulUrl,
 			"merchant_fail_url" => $apiFailedUrl,
@@ -141,5 +146,21 @@ class PayTR extends Provider implements ProviderInterface
 
 			echo "OK";
 		}
+	}
+
+	/**
+	 * @return mixed
+	 */
+	private function getApiId()
+	{
+		return $this->apiId;
+	}
+
+	/**
+	 * @param mixed $apiId
+	 */
+	public function setApiId($apiId): void
+	{
+		$this->apiId = $apiId;
 	}
 }

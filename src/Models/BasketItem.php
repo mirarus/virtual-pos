@@ -20,7 +20,7 @@ class BasketItem implements BasketItemInterface
 	private $name;
 	private $price = 0.0;
 	private $quantity = 1;
-	private $type;
+	private $type = "VIRTUAL";
 
 	/**
 	 * @return mixed

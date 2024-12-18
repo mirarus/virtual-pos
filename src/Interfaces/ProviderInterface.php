@@ -15,12 +15,6 @@ namespace Mirarus\VirtualPos\Interfaces;
 interface ProviderInterface
 {
 	/**
-	 * @param $apiId
-	 * @return void
-	 */
-	public function setApiId($apiId): void;
-
-	/**
 	 * @param string $apiKey
 	 * @return void
 	 */

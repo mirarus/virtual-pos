@@ -18,7 +18,6 @@ use GuzzleHttp\Client;
  */
 abstract class Provider extends Model implements ProviderInterface
 {
-	private $apiId;
 	private $apiKey;
 	private $apiSecret;
 	private $apiSandbox = false;
@@ -26,23 +25,6 @@ abstract class Provider extends Model implements ProviderInterface
 	private $apiReturnUrl;
 	private $apiSuccessfulUrl;
 	private $apiFailedUrl;
-
-	/**
-	 * @return mixed
-	 */
-	protected function getApiId()
-	{
-		return $this->apiId;
-	}
-
-	/**
-	 * @param $apiId
-	 * @return void
-	 */
-	public function setApiId($apiId): void
-	{
-		$this->apiId = $apiId;
-	}
 
 	/**
 	 * @return string
