@@ -42,7 +42,6 @@ $order->setId(10000);
 $order->setPrice(100);
 $order->setLocale(Locale::TR);
 $order->setCurrency(Currency::TL);
-$order->setInstallment(1);
 
 
 $basket = new Basket();
