@@ -45,7 +45,7 @@ $order->setCurrency(Currency::TL);
 
 
 $basket = new Basket();
-$basket->setName("Binocular");
+$basket->setName("Ayakkabı");
 $basket->setType(BasketType::PHYSICAL);
 
 
