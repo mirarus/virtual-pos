@@ -68,4 +68,9 @@ interface AddressInterface
 	 * @return void
 	 */
 	public function setCountry($country): void;
+
+	/**
+	 * @return string
+	 */
+	public function getFullAddress(): string;
 }

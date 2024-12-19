@@ -13,7 +13,6 @@ use Mirarus\VirtualPos\Models\Address;
 use Mirarus\VirtualPos\Providers\PayTR;
 use Mirarus\VirtualPos\Enums\Locale;
 use Mirarus\VirtualPos\Enums\Currency;
-use Mirarus\VirtualPos\Enums\BasketItemType;
 
 
 $PayTR = new PayTR();
@@ -24,7 +23,6 @@ $PayTR->setApiSandbox(true);
 $PayTR->setApiDebug(true);
 $PayTR->setApiSuccessfulUrl("http://localhost/pay-success");
 $PayTR->setApiFailedUrl("http://localhost/pay-failed");
-$PayTR->setApiReturnUrl("http://localhost/pay-return");
 
 
 $buyer = new Buyer();
@@ -52,11 +50,9 @@ $order->setInstallment(1);
 
 
 $basketItem = new BasketItem();
-$basketItem->setId(1);
 $basketItem->setName("Ayakkabı");
 $basketItem->setPrice("10.30");
-$basketItem->setQty("1");
-$basketItem->setType(BasketItemType::PHYSICAL);
+$basketItem->setQuantity("1");
 
 $basket = new Basket();
 $basket->setBasketItem($basketItem);
@@ -71,4 +67,4 @@ $virtualPos->setBasket($basket);
 
 
 $createPaymentForm = $virtualPos->createPaymentForm();
-var_dump($createPaymentForm);
+print_r($createPaymentForm);

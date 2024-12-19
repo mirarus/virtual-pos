@@ -14,7 +14,7 @@ use Mirarus\VirtualPos\Http\Request;
  * @author     Ali Güçlü <aliguclutr@gmail.com>
  * @copyright  Copyright (c) 2024
  * @license    MIT
- * @version    1.0.1
+ * @version    1.0.2
  * @since      1.0.0
  */
 class PayTR extends Provider implements ProviderInterface
@@ -39,17 +39,10 @@ class PayTR extends Provider implements ProviderInterface
 
 		$buyerIp = Request::getIp();
 		$buyerEmail = $this->getBuyer()->getEmail();
-		$buyerName = $this->getBuyer()->getName();
-		$buyerSurname = $this->getBuyer()->getSurname();
+		$buyerFullName = $this->getBuyer()->getFullName();
 		$buyerPhone = $this->getBuyer()->getPhone();
-		$buyerFullName = implode(' ', [$buyerName, $buyerSurname]);
 
-		$addressAddress = $this->getAddress()->getAddress();
-		$addressState = $this->getAddress()->getState();
-		$addressCity = $this->getAddress()->getCity();
-		$addressCountry = $this->getAddress()->getCountry();
-		$addressZipCode = $this->getAddress()->getZipCode();
-		$address = implode(', ', [$addressAddress, $addressState, $addressCity, $addressCountry, $addressZipCode]);
+		$address = $this->getAddress()->getFullAddress();
 
 		$orderId = $this->getOrder()->getId();
 		$orderPrice = $this->getOrder()->getPrice();
@@ -62,7 +55,7 @@ class PayTR extends Provider implements ProviderInterface
 		$maxInstallment = ($orderInstallment > 0) ? $orderInstallment : 0;
 		$noInstallment = ($orderInstallment > 0) ? 1 : 0;
 
-		$merchantOid = uniqid() . "PayTR" . $orderId;
+		$merchantOid = rand(1000000000, 9999999999) . "PayTR" . $orderId;
 		$amount = (number_format($orderPrice, 2, '.', '') * 100);
 
 		if (!empty($basketItems)) {
@@ -80,14 +73,14 @@ class PayTR extends Provider implements ProviderInterface
 		}
 
 		$hashData = ($apiId . $buyerIp . $merchantOid . $buyerEmail . $amount . $basket . $noInstallment . $maxInstallment . $orderCurrency . $apiSandbox);
-		$hashToken = base64_encode(hash_hmac('sha256', $hashData . $apiSecret, $apiKey, true));
+		$hashToken = $this->generateSignature($hashData, $apiKey, $apiSecret);
 
 		$response = $this->request()->post("get-token", [
 		  "form_params" => [
 			"merchant_id" => $apiId,
 			"merchant_oid" => $merchantOid,
 			"payment_amount" => $amount,
-			"paytr_token" => $hashToken,
+			"paytr_token" => $hashToken->token,
 			"no_installment" => $noInstallment,
 			"max_installment" => $maxInstallment,
 			"user_basket" => $basket,
@@ -107,10 +100,8 @@ class PayTR extends Provider implements ProviderInterface
 		]);
 
 		if (!empty($response->token)) {
-
-			$url = "https://www.paytr.com/odeme/guvenli/" . $response->token;
-			return '<script type="text/javascript">window.location.href = "' . $url . '";</script>';
-
+			header("Location: https://www.paytr.com/odeme/guvenli/" . $response->token);
+			die();
 		} else {
 			return $response->reason;
 		}
@@ -132,7 +123,6 @@ class PayTR extends Provider implements ProviderInterface
 		$hashToken = base64_encode(hash_hmac('sha256', ($merchantOid . $apiSecret . $status . $totalAmount), $apiKey, true));
 
 		$orderId = explode('PayTR', $merchantOid);
-		$amount = ($totalAmount / 100);
 
 		if ($hashToken != $hash) {
 			die('PayTR notification failed: bad hash');
@@ -143,6 +133,7 @@ class PayTR extends Provider implements ProviderInterface
 			$data = new stdClass();
 			$data->orderId = $orderId[1];
 			$data->status = $status;
+			$data->paymentData = $_POST;
 
 			$callback($data);
 
@@ -164,5 +155,21 @@ class PayTR extends Provider implements ProviderInterface
 	public function setApiId($apiId): void
 	{
 		$this->apiId = $apiId;
+	}
+
+	/**
+	 * @param $data
+	 * @param $apiKey
+	 * @param $apiSecret
+	 * @return stdClass
+	 */
+	private function generateSignature($data, $apiKey, $apiSecret): stdClass
+	{
+		$token = base64_encode(hash_hmac('sha256', $data . $apiSecret, $apiKey, true));
+
+		$data = new stdClass;
+		$data->token = $token;
+
+		return $data;
 	}
 }

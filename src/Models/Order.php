@@ -21,6 +21,7 @@ class Order implements OrderInterface
 	private $locale;
 	private $currency;
 	private $installment = 0;
+	private $installments = [1];
 
 	/**
 	 * @return mixed
@@ -105,5 +106,22 @@ class Order implements OrderInterface
 	public function setInstallment(int $installment): void
 	{
 		$this->installment = $installment;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getInstallments(): array
+	{
+		return $this->installments;
+	}
+
+	/**
+	 * @param array $installments
+	 * @return void
+	 */
+	public function setInstallments(array $installments): void
+	{
+		$this->installments = $installments;
 	}
 }

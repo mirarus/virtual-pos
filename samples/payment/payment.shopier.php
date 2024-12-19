@@ -4,25 +4,22 @@
 
 require "vendor/autoload.php";
 
+use Mirarus\VirtualPos\Enums\BasketType;
 use Mirarus\VirtualPos\Models\Basket;
-use Mirarus\VirtualPos\Models\BasketItem;
 use Mirarus\VirtualPos\Models\Order;
 use Mirarus\VirtualPos\VirtualPos;
 use Mirarus\VirtualPos\Models\Buyer;
 use Mirarus\VirtualPos\Models\Address;
-use Mirarus\VirtualPos\Providers\PayTR;
+use Mirarus\VirtualPos\Providers\Shopier;
 use Mirarus\VirtualPos\Enums\Locale;
 use Mirarus\VirtualPos\Enums\Currency;
 
 
-$PayTR = new PayTR();
-$PayTR->setApiId("--api-id--");
-$PayTR->setApiKey("--api-key--");
-$PayTR->setApiSecret("--api-secret--");
-$PayTR->setApiSandbox(true);
-$PayTR->setApiDebug(true);
-$PayTR->setApiSuccessfulUrl("http://localhost/pay-success");
-$PayTR->setApiFailedUrl("http://localhost/pay-failed");
+$Shopier = new Shopier();
+$Shopier->setApiKey("--api-key--");
+$Shopier->setApiSecret("--api-secret--");
+$Shopier->setWebSiteIndex(1);
+$Shopier->setApiReturnUrl("http://localhost/pay-callback");
 
 
 $buyer = new Buyer();
@@ -43,23 +40,18 @@ $address->setZipCode("06000");
 
 $order = new Order();
 $order->setId(10000);
-$order->setPrice(100);
+$order->setPrice(10);
 $order->setLocale(Locale::TR);
 $order->setCurrency(Currency::TL);
-$order->setInstallment(1);
 
-
-$basketItem = new BasketItem();
-$basketItem->setName("Ayakkabı");
-$basketItem->setPrice("10.30");
-$basketItem->setQuantity("1");
 
 $basket = new Basket();
-$basket->setBasketItem($basketItem);
+$basket->setName("Ayakkabı");
+$basket->setType(BasketType::PHYSICAL);
 
 
 $virtualPos = new VirtualPos();
-$virtualPos->setProvider($PayTR);
+$virtualPos->setProvider($Shopier);
 $virtualPos->setBuyer($buyer);
 $virtualPos->setAddress($address);
 $virtualPos->setOrder($order);
@@ -67,4 +59,4 @@ $virtualPos->setBasket($basket);
 
 
 $createPaymentForm = $virtualPos->createPaymentForm();
-var_dump($createPaymentForm);
+print_r($createPaymentForm);

@@ -16,7 +16,7 @@ use GuzzleHttp\Exception\RequestException;
  * @author     Ali Güçlü <aliguclutr@gmail.com>
  * @copyright  Copyright (c) 2024
  * @license    MIT
- * @version    1.0.0
+ * @version    1.0.1
  * @since      1.0.0
  */
 class Request
@@ -43,6 +43,7 @@ class Request
 	/**
 	 * @param string $endpoint
 	 * @param array $data
+	 * @param null $response
 	 * @return mixed|stdClass|string
 	 */
 	public function post(string $endpoint, array $data = [], &$response = null)
@@ -57,9 +58,10 @@ class Request
 
 	/**
 	 * @param string $endpoint
+	 * @param null $response
 	 * @return mixed|stdClass|string
 	 */
-	public function get(string $endpoint)
+	public function get(string $endpoint, &$response = null)
 	{
 		try {
 			$response = $this->client->get($endpoint);
@@ -72,9 +74,10 @@ class Request
 	/**
 	 * @param string $endpoint
 	 * @param array $data
+	 * @param null $response
 	 * @return mixed|stdClass|string
 	 */
-	public function put(string $endpoint, array $data = [])
+	public function put(string $endpoint, array $data = [], &$response = null)
 	{
 		try {
 			$response = $this->client->put($endpoint, $data);
@@ -86,9 +89,10 @@ class Request
 
 	/**
 	 * @param string $endpoint
+	 * @param null $response
 	 * @return mixed|stdClass|string
 	 */
-	public function delete(string $endpoint)
+	public function delete(string $endpoint, &$response = null)
 	{
 		try {
 			$response = $this->client->delete($endpoint);

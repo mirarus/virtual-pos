@@ -21,6 +21,7 @@ class Buyer implements BuyerInterface
 	private $surname;
 	private $email;
 	private $phone;
+	private $identityNumber;
 
 	/**
 	 * @return mixed
@@ -76,6 +77,14 @@ class Buyer implements BuyerInterface
 	/**
 	 * @return string
 	 */
+	public function getFullName(): string
+	{
+		return implode(' ', [$this->name, $this->surname]);
+	}
+
+	/**
+	 * @return string
+	 */
 	public function getEmail(): string
 	{
 		return $this->email;
@@ -105,5 +114,21 @@ class Buyer implements BuyerInterface
 	public function setPhone($phone): void
 	{
 		$this->phone = $phone;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getIdentityNumber()
+	{
+		return $this->identityNumber;
+	}
+
+	/**
+	 * @param mixed $identityNumber
+	 */
+	public function setIdentityNumber($identityNumber): void
+	{
+		$this->identityNumber = $identityNumber;
 	}
 }

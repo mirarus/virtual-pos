@@ -20,6 +20,7 @@ class BasketItem implements BasketItemInterface
 	private $name;
 	private $price = 0.0;
 	private $quantity = 1;
+	private $category = "General";
 	private $type = "VIRTUAL";
 
 	/**
@@ -88,6 +89,23 @@ class BasketItem implements BasketItemInterface
 	public function setQuantity(int $quantity): void
 	{
 		$this->quantity = $quantity;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getCategory(): string
+	{
+		return $this->category;
+	}
+
+	/**
+	 * @param string $category
+	 * @return void
+	 */
+	public function setCategory(string $category): void
+	{
+		$this->category = $category;
 	}
 
 	/**

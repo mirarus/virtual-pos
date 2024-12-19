@@ -50,6 +50,11 @@ interface BuyerInterface
 	/**
 	 * @return string
 	 */
+	public function getFullName(): string;
+
+	/**
+	 * @return string
+	 */
 	public function getEmail(): string;
 
 	/**
@@ -68,4 +73,15 @@ interface BuyerInterface
 	 * @return void
 	 */
 	public function setPhone($phone): void;
+
+
+	/**
+	 * @return mixed
+	 */
+	public function getIdentityNumber();
+
+	/**
+	 * @param mixed $identityNumber
+	 */
+	public function setIdentityNumber($identityNumber): void;
 }

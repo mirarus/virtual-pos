@@ -42,12 +42,10 @@ class Shopier extends Provider implements ProviderInterface
 		$buyerSurname = $this->getBuyer()->getSurname();
 		$buyerPhone = $this->getBuyer()->getPhone();
 
-		$addressAddress = $this->getAddress()->getAddress();
-		$addressState = $this->getAddress()->getState();
+		$address = $this->getAddress()->getFullAddress();
 		$addressCity = $this->getAddress()->getCity();
 		$addressCountry = $this->getAddress()->getCountry();
 		$addressZipCode = $this->getAddress()->getZipCode();
-		$address = implode(', ', [$addressAddress, $addressState, $addressCity, $addressCountry, $addressZipCode]);
 
 		$orderId = $this->getOrder()->getId();
 		$orderPrice = $this->getOrder()->getPrice();
@@ -58,7 +56,7 @@ class Shopier extends Provider implements ProviderInterface
 		$basketType = $this->getBasket()->getType();
 
 		$amount = round($orderPrice, 2);
-		$random_nr = rand(100000, 999999);
+		$randNum = rand(1000000000, 9999999999);
 
 		$productName = str_replace('"', '', $basketName);
 		$productName = str_replace('&quot;', '', $productName);
@@ -115,13 +113,13 @@ class Shopier extends Provider implements ProviderInterface
 		  'modul_version' => "1.0.4",
 		  'platform' => 0,
 		  'is_in_frame' => 0,
-		  'random_nr' => $random_nr,
+		  'random_nr' => $randNum,
 		  'callback_url' => $apiReturnUrl
 		];
 
-		$hashData = ($random_nr . $orderId . $amount . $currency);
-		$hashToken = base64_encode(hash_hmac('sha256', $hashData, $apiSecret, true));
-		$formFields['signature'] = $hashToken;
+		$hashData = ($randNum . $orderId . $amount . $currency);
+		$generateSignature = $this->generateSignature($hashData, $apiSecret);
+		$formFields['signature'] = $generateSignature->token;
 
 		$formOutput = '<form id="shopier_payment_form" method="post" action="' . htmlspecialchars($this->baseUri, ENT_QUOTES, 'UTF-8') . '">';
 		foreach ($formFields as $k => $v) {
@@ -157,7 +155,8 @@ class Shopier extends Provider implements ProviderInterface
 
 			$data = new stdClass();
 			$data->orderId = $orderId;
-			$data->status = $status;
+			$data->status = ($status == 'success');
+			$data->paymentData = $_REQUEST;
 
 			$callback($data);
 		}
@@ -178,5 +177,20 @@ class Shopier extends Provider implements ProviderInterface
 	public function setWebSiteIndex(int $webSiteIndex): void
 	{
 		$this->webSiteIndex = $webSiteIndex;
+	}
+
+	/**
+	 * @param $data
+	 * @param $apiSecret
+	 * @return stdClass
+	 */
+	private function generateSignature($data, $apiSecret): stdClass
+	{
+		$hash = base64_encode(hash_hmac('sha256', $data, $apiSecret, true));
+
+		$data = new stdClass;
+		$data->token = $hash;
+
+		return $data;
 	}
 }

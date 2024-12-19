@@ -106,4 +106,12 @@ class Address implements AddressInterface
 	{
 		$this->country = $country;
 	}
+
+	/**
+	 * @return string
+	 */
+	public function getFullAddress(): string
+	{
+		return implode(', ', [$this->address, $this->state, $this->city, $this->country, $this->zipCode]);
+	}
 }

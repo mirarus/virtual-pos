@@ -68,4 +68,15 @@ interface OrderInterface
 	 * @return void
 	 */
 	public function setInstallment(int $installment): void;
+
+	/**
+	 * @return array
+	 */
+	public function getInstallments(): array;
+
+	/**
+	 * @param array $installments
+	 * @return void
+	 */
+	public function setInstallments(array $installments): void;
 }

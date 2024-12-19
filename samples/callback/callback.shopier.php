@@ -5,18 +5,15 @@
 require "vendor/autoload.php";
 
 use Mirarus\VirtualPos\VirtualPos;
-use Mirarus\VirtualPos\Providers\PayTR;
+use Mirarus\VirtualPos\Providers\Shopier;
 
-$PayTR = new PayTR();
-$PayTR->setApiKey("--api-key--");
-$PayTR->setApiSecret("--api-secret--");
+$Shopier = new Shopier();
+$Shopier->setApiSecret("--api-secret--");
 
 $virtualPos = new VirtualPos();
-$virtualPos->setProvider($PayTR);
-
+$virtualPos->setProvider($Shopier);
 
 $createCallback = $virtualPos->createCallback(function($data) {
-	var_dump($data);
+	print_r($data);
 	// CallBack Proccess
 });
-var_dump($createCallback);

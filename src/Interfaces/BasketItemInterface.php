@@ -61,6 +61,17 @@ interface BasketItemInterface
 	/**
 	 * @return string
 	 */
+	public function getCategory(): string;
+
+	/**
+	 * @param string $category
+	 * @return void
+	 */
+	public function setCategory(string $category): void;
+
+	/**
+	 * @return string
+	 */
 	public function getType(): string;
 
 	/**
