@@ -71,7 +71,7 @@ class Iyzico extends Provider implements ProviderInterface
 		$object->locale = $orderLocale;
 		$object->conversationId = $orderId;
 		$object->price = $totalPrice;
-		$object->basketId = $orderId;
+		$object->basketId = rand(1000000000, 9999999999) . "Iyzico" . $orderId;
 		$object->paymentGroup = "PRODUCT";
 
 		$object->buyer = new stdClass;
@@ -147,16 +147,11 @@ class Iyzico extends Provider implements ProviderInterface
 		$apiSecret = $this->getApiSecret();
 		$apiSandbox = $this->isApiSandbox();
 
-		$orderId = $this->getOrder()->getId();
-		$orderLocale = strtolower($this->getOrder()->getLocale());
-
 		$this->baseUri = $apiSandbox ? $this->baseUriSandbox : $this->baseUri;
 
 		$token = !empty($_POST['token']) ? $_POST['token'] : null;
 
 		$object = new stdClass();
-		$object->locale = $orderLocale;
-		$object->conversationId = $orderId;
 		$object->token = $token;
 
 		$generatePki = $this->generatePKI($object);
@@ -174,12 +169,13 @@ class Iyzico extends Provider implements ProviderInterface
 
 		if ($response->status != 'success') {
 			die('Iyzico notification failed: bad parameters');
-		} else if ($response->paymentStatus != 'SUCCESS' || $orderId != $response->conversationId) {
+		} else if ($response->paymentStatus != 'SUCCESS') {
 			echo $response->errorMessage;
 		} else {
+			$orderId = explode('Iyzico', $response->basketId);
 
 			$data = new stdClass();
-			$data->orderId = $response->conversationId;
+			$data->orderId = $orderId[1];
 			$data->status = ($response->paymentStatus == 'SUCCESS');
 			$data->paymentData = $response;
 

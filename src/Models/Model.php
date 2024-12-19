@@ -20,10 +20,10 @@ use Mirarus\VirtualPos\Interfaces\BasketInterface;
  */
 abstract class Model implements ModelInterface
 {
-	protected $buyer;
-	protected $address;
-	protected $order;
-	protected $basket;
+	private $buyer;
+	private $address;
+	private $order;
+	private $basket;
 
 	/**
 	 * @return BuyerInterface

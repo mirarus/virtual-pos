@@ -58,10 +58,6 @@ class VirtualPos extends Model
 	{
 		$provider = $this->getProvider();
 
-		if ($this->order !== null) {
-			$provider->setOrder($this->getOrder());
-		}
-
 		$provider->createCallback($callback);
 	}
 }
