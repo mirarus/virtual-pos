@@ -83,7 +83,7 @@ $basketItem->setType(BasketItemType::PHYSICAL);
 $basket = new Basket();
 $basket->setBasketItem($basketItem); // Sepet İçeriği (Shopier için ilk tanımlanan basketItem geçerli olacaktır)
 
-
+// Sınıf Başlatma
 $virtualPos = new VirtualPos();
 $virtualPos->setProvider($PayTR); // $PayTR, $Iyzico veya $Shopier
 $virtualPos->setBuyer($buyer);
@@ -91,6 +91,5 @@ $virtualPos->setAddress($address);
 $virtualPos->setOrder($order);
 $virtualPos->setBasket($basket);
 
-
-$createPaymentForm = $virtualPos->createPaymentForm();
-print_r($createPaymentForm);
+// Ödeme Formu Oluştur
+echo $virtualPos->createPaymentForm();

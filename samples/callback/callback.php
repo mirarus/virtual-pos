@@ -27,7 +27,7 @@ $Iyzico->setApiSandbox(true);
 $Shopier = new Shopier();
 $Shopier->setApiSecret("--api-secret--");
 
-
+// Sınıf Başlatma
 $virtualPos = new VirtualPos();
 $virtualPos->setProvider($PayTR); // $PayTR, $Iyzico veya $Shopier
 
@@ -35,6 +35,7 @@ $virtualPos->setProvider($PayTR); // $PayTR, $Iyzico veya $Shopier
 // CallBack İşlemi - DB İşlemleri vs. yapılabilir, Return Gönderilemez
 $createCallback = $virtualPos->createCallback(function($data) {
 	// data: [orderId, status, paymentData]
+	// PayTR callback tarafında gönderilmesi istenen OK ifadesi dahili olarak aktarılmaktadır.
 
 	print_r($data);
 	// CallBack Proccess
