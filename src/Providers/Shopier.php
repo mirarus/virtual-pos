@@ -16,7 +16,7 @@ use Mirarus\VirtualPos\Models\Provider;
  * @author     Ali Güçlü <aliguclutr@gmail.com>
  * @copyright  Copyright (c) 2024
  * @license    MIT
- * @version    1.0.0
+ * @version    1.0.1
  * @since      1.0.0
  */
 class Shopier extends Provider implements ProviderInterface
@@ -52,20 +52,37 @@ class Shopier extends Provider implements ProviderInterface
 		$orderCurrency = $this->getOrder()->getCurrency();
 		$orderLocale = $this->getOrder()->getLocale();
 
-		$basketName = $this->getBasket()->getName();
-		$basketType = $this->getBasket()->getType();
+		$basketItems = $this->getBasket()->getBasketItems();
 
 		$amount = round($orderPrice, 2);
 		$randNum = rand(1000000000, 9999999999);
 
-		$productName = str_replace('"', '', $basketName);
-		$productName = str_replace('&quot;', '', $productName);
+		$basketArray = [];
+		if (!empty($basketItems)) {
+			foreach ($basketItems as $item) {
+				$itemName = $item->getName();
+				$itemType = $item->getType();
 
-		if ($basketType == BasketType::VIRTUAL) {
-			$productType = 1;
-		} else if ($basketType == BasketType::PHYSICAL) {
-			$productType = 0;
+				$productName = str_replace('"', '', $itemName);
+				$productName = str_replace('&quot;', '', $productName);
+
+				if ($itemType == BasketType::VIRTUAL) {
+					$productType = 1;
+				} else if ($itemType == BasketType::PHYSICAL) {
+					$productType = 0;
+				} else {
+					$productType = 1;
+				}
+
+				$basketArray[0] = [
+				  'name' => $productName,
+				  'type' => $productType
+				];
+			}
+			$productName = $basketArray[0]['name'];
+			$productType = $basketArray[0]['type'];
 		} else {
+			$productName = "General Product";
 			$productType = 1;
 		}
 
@@ -103,10 +120,10 @@ class Shopier extends Provider implements ProviderInterface
 		  'billing_city' => $addressCity,
 		  'billing_country' => $addressCountry,
 		  'billing_postcode' => $addressZipCode,
-		  'shipping_address' => 'NA',
-		  'shipping_city' => 'NA',
-		  'shipping_country' => 'NA',
-		  'shipping_postcode' => 'NA',
+		  'shipping_address' => $address,
+		  'shipping_city' => $addressCity,
+		  'shipping_country' => $addressCountry,
+		  'shipping_postcode' => $addressZipCode,
 		  'total_order_value' => $amount,
 		  'currency' => $currency,
 		  'current_language' => $locale,
